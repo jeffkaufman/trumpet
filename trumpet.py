@@ -154,6 +154,7 @@ def optimize_for_all_notes():
 
 def determine_best_key():
   generally_tuned = optimize(note_names)
+  unoptimized_errors = []
   optimized_errors = []
   for i, note in enumerate(note_names[:12]):
     notes_without_numbers = []
@@ -166,9 +167,20 @@ def determine_best_key():
     t = optimize(low_enough_notes)
     #print note[:-1], generally_tuned.msq_error_over(low_enough_notes), t.msq_error_over(low_enough_notes)
     optimized_errors.append((t.msq_error_over(low_enough_notes), note[:-1], t))
+    unoptimized_errors.append((generally_tuned.msq_error_over(low_enough_notes), note[:-1], generally_tuned))
+  
+  print "Best keys when playing a trumpet tuned for that key:"
   optimized_errors.sort()
   for error, note, t in optimized_errors:
-    print "%.4f%%\t%s\t%r" % (error*100, note, t)
+    print "  %.4f%%\t%s\t%r" % (error*100, note, t)
+
+  print
+  print "Best keys when playing a trumpet tuned to make all notes their best:"
+  unoptimized_errors.sort()
+  for error, note, t in unoptimized_errors:
+    print "  %.4f%%\t%s\t%r" % (error*100, note, t)
+
+  print
   print repr(Trumpet())
 
 
